@@ -11,6 +11,7 @@ import {
 } from '@wordpress/block-editor';
 import {
 	FontSizePicker,
+	RangeControl,
 	__experimentalToolsPanel as ToolsPanel,
 	__experimentalToolsPanelItem as ToolsPanelItem,
 } from '@wordpress/components';
@@ -20,6 +21,9 @@ import { __ } from '@wordpress/i18n';
  * Internal dependencies
  */
 import { getSupportedGlobalStylesPanels, useSetting, useStyle } from './hooks';
+
+const MIN_COLUMNS = 1;
+const MAX_COLUMNS = 5;
 
 export function useHasTypographyPanel( name ) {
 	const hasFontFamily = useHasFontFamilyControl( name );
@@ -107,6 +111,14 @@ function useHasTextDecorationControl( name, element ) {
 	// We shouldn't allow other blocks or elements to set textDecoration
 	// because this will be inherited by their children.
 	return ! name && element === 'link';
+}
+
+function useHasTextColumnsControl( name ) {
+	const supports = getSupportedGlobalStylesPanels( name );
+	return (
+		useSetting( 'typography.textColumns', name )[ 0 ] &&
+		supports.includes( 'textColumns' )
+	);
 }
 
 function useStyleWithReset( path, blockName ) {
@@ -202,6 +214,7 @@ export default function TypographyPanel( {
 	const hasAppearanceControl = useHasAppearanceControl( name );
 	const appearanceControlLabel = useAppearanceControlLabel( name );
 	const hasLetterSpacingControl = useHasLetterSpacingControl( name, element );
+	const hasTextColumnsControl = useHasTextColumnsControl( name );
 	const hasTextTransformControl = useHasTextTransformControl( name, element );
 	const hasTextDecorationControl = useHasTextDecorationControl(
 		name,
@@ -264,6 +277,8 @@ export default function TypographyPanel( {
 		variationPath + prefix + 'typography.textDecoration',
 		name
 	);
+	const [ textColumns, setTextColumns, hasTextColumns, resetTextColumns ] =
+		useStyleWithReset( prefix + 'typography.textColumns', name );
 
 	const resetAll = () => {
 		resetFontFamily();
@@ -272,6 +287,7 @@ export default function TypographyPanel( {
 		resetLineHeight();
 		resetLetterSpacing();
 		resetTextTransform();
+		resetTextColumns();
 	};
 
 	return (
@@ -401,6 +417,23 @@ export default function TypographyPanel( {
 						onChange={ setTextDecoration }
 						size="__unstable-large"
 						__unstableInputWidth="auto"
+					/>
+				</ToolsPanelItem>
+			) }
+			{ hasTextColumnsControl && (
+				<ToolsPanelItem
+					label={ __( 'Text columns' ) }
+					hasValue={ hasTextColumns }
+					onDeselect={ resetTextColumns }
+					isShownByDefault
+				>
+					<RangeControl
+						label={ __( 'Text columns' ) }
+						max={ MAX_COLUMNS }
+						min={ MIN_COLUMNS }
+						onChange={ setTextColumns }
+						size="__unstable-large"
+						value={ textColumns }
 					/>
 				</ToolsPanelItem>
 			) }
