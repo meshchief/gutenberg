@@ -668,12 +668,14 @@ class WP_HTML_Tag_Processor_Test extends WP_UnitTestCase {
 	 *
 	 * @covers add_class
 	 * @covers get_updated_html
+	 * @covers get_attribute
 	 */
 	public function test_add_class_creates_a_class_attribute_when_there_is_none() {
 		$p = new WP_HTML_Tag_Processor( self::HTML_SIMPLE );
 		$p->next_tag();
 		$p->add_class( 'foo-class' );
 		$this->assertSame( '<div class="foo-class" id="first"><span id="second">Text</span></div>', $p->get_updated_html() );
+		$this->assertSame( 'foo-class', $p->get_attribute( 'class' ) );
 	}
 
 	/**
@@ -681,6 +683,7 @@ class WP_HTML_Tag_Processor_Test extends WP_UnitTestCase {
 	 *
 	 * @covers add_class
 	 * @covers get_updated_html
+	 * @covers get_attribute
 	 */
 	public function test_calling_add_class_twice_creates_a_class_attribute_with_both_class_names_when_there_is_no_class_attribute() {
 		$p = new WP_HTML_Tag_Processor( self::HTML_SIMPLE );
@@ -688,6 +691,7 @@ class WP_HTML_Tag_Processor_Test extends WP_UnitTestCase {
 		$p->add_class( 'foo-class' );
 		$p->add_class( 'bar-class' );
 		$this->assertSame( '<div class="foo-class bar-class" id="first"><span id="second">Text</span></div>', $p->get_updated_html() );
+		$this->assertSame( 'foo-class bar-class', $p->get_attribute( 'class' ) );
 	}
 
 	/**
@@ -695,12 +699,14 @@ class WP_HTML_Tag_Processor_Test extends WP_UnitTestCase {
 	 *
 	 * @covers remove_class
 	 * @covers get_updated_html
+	 * @covers get_attribute
 	 */
 	public function test_remove_class_does_not_change_the_markup_when_there_is_no_class_attribute() {
 		$p = new WP_HTML_Tag_Processor( self::HTML_SIMPLE );
 		$p->next_tag();
 		$p->remove_class( 'foo-class' );
 		$this->assertSame( self::HTML_SIMPLE, $p->get_updated_html() );
+		$this->assertNull( $p->get_attribute( 'class' ) );
 	}
 
 	/**
@@ -708,6 +714,7 @@ class WP_HTML_Tag_Processor_Test extends WP_UnitTestCase {
 	 *
 	 * @covers add_class
 	 * @covers get_updated_html
+	 * @covers get_attribute
 	 */
 	public function test_add_class_appends_class_names_to_the_existing_class_attribute_when_one_already_exists() {
 		$p = new WP_HTML_Tag_Processor( self::HTML_WITH_CLASSES );
@@ -718,6 +725,7 @@ class WP_HTML_Tag_Processor_Test extends WP_UnitTestCase {
 			'<div class="main with-border foo-class bar-class" id="first"><span class="not-main bold with-border" id="second">Text</span></div>',
 			$p->get_updated_html()
 		);
+		$this->assertSame( 'main with-border foo-class bar-class', $p->get_attribute( 'class' ) );
 	}
 
 	/**
@@ -725,6 +733,7 @@ class WP_HTML_Tag_Processor_Test extends WP_UnitTestCase {
 	 *
 	 * @covers remove_class
 	 * @covers get_updated_html
+	 * @covers get_attribute
 	 */
 	public function test_remove_class_removes_a_single_class_from_the_class_attribute_when_one_exists() {
 		$p = new WP_HTML_Tag_Processor( self::HTML_WITH_CLASSES );
@@ -734,6 +743,7 @@ class WP_HTML_Tag_Processor_Test extends WP_UnitTestCase {
 			'<div class=" with-border" id="first"><span class="not-main bold with-border" id="second">Text</span></div>',
 			$p->get_updated_html()
 		);
+		$this->assertSame( ' with-border', $p->get_attribute( 'class' ) );
 	}
 
 	/**
@@ -741,6 +751,7 @@ class WP_HTML_Tag_Processor_Test extends WP_UnitTestCase {
 	 *
 	 * @covers remove_class
 	 * @covers get_updated_html
+	 * @covers get_attribute
 	 */
 	public function test_calling_remove_class_with_all_listed_class_names_removes_the_existing_class_attribute_from_the_markup() {
 		$p = new WP_HTML_Tag_Processor( self::HTML_WITH_CLASSES );
@@ -751,6 +762,7 @@ class WP_HTML_Tag_Processor_Test extends WP_UnitTestCase {
 			'<div  id="first"><span class="not-main bold with-border" id="second">Text</span></div>',
 			$p->get_updated_html()
 		);
+		$this->assertNull( $p->get_attribute( 'class' ) );
 	}
 
 	/**
@@ -758,6 +770,7 @@ class WP_HTML_Tag_Processor_Test extends WP_UnitTestCase {
 	 *
 	 * @covers add_class
 	 * @covers get_updated_html
+	 * @covers get_attribute
 	 */
 	public function test_add_class_does_not_add_duplicate_class_names() {
 		$p = new WP_HTML_Tag_Processor( self::HTML_WITH_CLASSES );
@@ -767,6 +780,7 @@ class WP_HTML_Tag_Processor_Test extends WP_UnitTestCase {
 			'<div class="main with-border" id="first"><span class="not-main bold with-border" id="second">Text</span></div>',
 			$p->get_updated_html()
 		);
+		$this->assertSame( 'main with-border', $p->get_attribute( 'class' ) );
 	}
 
 	/**
@@ -774,6 +788,7 @@ class WP_HTML_Tag_Processor_Test extends WP_UnitTestCase {
 	 *
 	 * @covers add_class
 	 * @covers get_updated_html
+	 * @covers get_attribute
 	 */
 	public function test_add_class_preserves_class_name_order_when_a_duplicate_class_name_is_added() {
 		$p = new WP_HTML_Tag_Processor( self::HTML_WITH_CLASSES );
@@ -783,6 +798,7 @@ class WP_HTML_Tag_Processor_Test extends WP_UnitTestCase {
 			'<div class="main with-border" id="first"><span class="not-main bold with-border" id="second">Text</span></div>',
 			$p->get_updated_html()
 		);
+		$this->assertSame( 'main with-border', $p->get_attribute( 'class' ) );
 	}
 
 	/**
@@ -790,6 +806,7 @@ class WP_HTML_Tag_Processor_Test extends WP_UnitTestCase {
 	 *
 	 * @covers add_class
 	 * @covers get_updated_html
+	 * @covers get_attribute
 	 */
 	public function test_add_class_when_there_is_a_class_attribute_with_excessive_whitespaces() {
 		$p = new WP_HTML_Tag_Processor(
@@ -801,6 +818,7 @@ class WP_HTML_Tag_Processor_Test extends WP_UnitTestCase {
 			'<div class="   main   with-border foo-class" id="first"><span class="not-main bold with-border" id="second">Text</span></div>',
 			$p->get_updated_html()
 		);
+		$this->assertSame( '   main   with-border foo-class', $p->get_attribute( 'class' ) );
 	}
 
 	/**
@@ -808,6 +826,7 @@ class WP_HTML_Tag_Processor_Test extends WP_UnitTestCase {
 	 *
 	 * @covers remove_class
 	 * @covers get_updated_html
+	 * @covers get_attribute
 	 */
 	public function test_remove_class_preserves_whitespaces_when_there_is_a_class_attribute_with_excessive_whitespaces() {
 		$p = new WP_HTML_Tag_Processor(
@@ -819,6 +838,7 @@ class WP_HTML_Tag_Processor_Test extends WP_UnitTestCase {
 			'<div class="   main" id="first"><span class="not-main bold with-border" id="second">Text</span></div>',
 			$p->get_updated_html()
 		);
+		$this->assertSame( '   main', $p->get_attribute( 'class' ) );
 	}
 
 	/**
@@ -826,6 +846,7 @@ class WP_HTML_Tag_Processor_Test extends WP_UnitTestCase {
 	 *
 	 * @covers remove_class
 	 * @covers get_updated_html
+	 * @covers get_attribute
 	 */
 	public function test_removing_all_classes_removes_the_existing_class_attribute_from_the_markup_even_when_excessive_whitespaces_are_present() {
 		$p = new WP_HTML_Tag_Processor(
@@ -838,6 +859,7 @@ class WP_HTML_Tag_Processor_Test extends WP_UnitTestCase {
 			'<div  id="first"><span class="not-main bold with-border" id="second">Text</span></div>',
 			$p->get_updated_html()
 		);
+		$this->assertNull( $p->get_attribute( 'class' ) );
 	}
 
 	/**
@@ -851,6 +873,7 @@ class WP_HTML_Tag_Processor_Test extends WP_UnitTestCase {
 	 * @covers add_class
 	 * @covers set_attribute
 	 * @covers get_updated_html
+	 * @covers get_attribute
 	 */
 	public function test_set_attribute_takes_priority_over_add_class() {
 		$p = new WP_HTML_Tag_Processor( self::HTML_WITH_CLASSES );
@@ -862,6 +885,11 @@ class WP_HTML_Tag_Processor_Test extends WP_UnitTestCase {
 			$p->get_updated_html(),
 			'Calling get_updated_html after updating first tag\'s attributes did not return the expected HTML'
 		);
+		$this->assertSame(
+			'set_attribute',
+			$p->get_attribute( 'class' ),
+			'Calling get_attribute after updating first tag\'s attributes did not return the expected class name'
+		);
 
 		$p = new WP_HTML_Tag_Processor( self::HTML_WITH_CLASSES );
 		$p->next_tag();
@@ -871,6 +899,11 @@ class WP_HTML_Tag_Processor_Test extends WP_UnitTestCase {
 			'<div class="set_attribute" id="first"><span class="not-main bold with-border" id="second">Text</span></div>',
 			$p->get_updated_html(),
 			'Calling get_updated_html after updating second tag\'s attributes did not return the expected HTML'
+		);
+		$this->assertSame(
+			'set_attribute',
+			$p->get_attribute( 'class' ),
+			'Calling get_attribute after updating first tag\'s attributes did not return the expected class name'
 		);
 	}
 
