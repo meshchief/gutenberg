@@ -6,11 +6,9 @@ import {
 	MenuItem,
 	MenuItemsChoice,
 	DropdownMenu,
-	Button,
-	VisuallyHidden,
 } from '@wordpress/components';
 import { useEntityProp } from '@wordpress/core-data';
-import { Icon, chevronUp, chevronDown, moreVertical } from '@wordpress/icons';
+import { moreVertical } from '@wordpress/icons';
 import { __, sprintf } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { useEffect, useMemo, useState } from '@wordpress/element';
@@ -29,14 +27,11 @@ function NavigationMenuSelector( {
 	actionLabel,
 	createNavigationMenuIsSuccess,
 	createNavigationMenuIsError,
-	toggleProps = {},
 } ) {
 	/* translators: %s: The name of a menu. */
 	const createActionLabel = __( "Create from '%s'" );
 
 	const [ selectorLabel, setSelectorLabel ] = useState( '' );
-	const [ isPressed, setIsPressed ] = useState( false );
-	const [ enableOptions, setEnableOptions ] = useState( false );
 	const [ isCreatingMenu, setIsCreatingMenu ] = useState( false );
 
 	actionLabel = actionLabel || createActionLabel;
@@ -57,18 +52,12 @@ function NavigationMenuSelector( {
 		'title'
 	);
 
-	const shouldEnableMenuSelector =
-		( canSwitchNavigationMenu || canUserCreateNavigationMenu ) &&
-		hasResolvedNavigationMenus &&
-		! isCreatingMenu;
-
 	const menuChoices = useMemo( () => {
 		return (
 			navigationMenus?.map( ( { id, title } ) => {
 				const label = decodeEntities( title.rendered );
 				if ( id === currentMenuId && ! isCreatingMenu ) {
 					setSelectorLabel( currentTitle );
-					setEnableOptions( shouldEnableMenuSelector );
 				}
 				return {
 					value: id,
@@ -101,7 +90,6 @@ function NavigationMenuSelector( {
 			setSelectorLabel( __( 'Loading …' ) );
 		} else if ( noMenuSelected || noBlockMenus || menuUnavailable ) {
 			setSelectorLabel( __( 'Select menu' ) );
-			setEnableOptions( shouldEnableMenuSelector );
 		}
 
 		if (
@@ -117,28 +105,6 @@ function NavigationMenuSelector( {
 		createNavigationMenuIsSuccess,
 		isNavigationMenuResolved,
 	] );
-
-	toggleProps = {
-		...toggleProps,
-		className: 'wp-block-navigation__navigation-selector-button',
-		children: (
-			<>
-				<VisuallyHidden as="span">
-					{ __( 'Select Menu' ) }
-				</VisuallyHidden>
-				<Icon
-					icon={ isPressed ? chevronUp : chevronDown }
-					className="wp-block-navigation__navigation-selector-button__icon"
-				/>
-			</>
-		),
-		isBusy: ! enableOptions,
-		disabled: ! enableOptions,
-		__experimentalIsFocusable: true,
-		onClick: () => {
-			setIsPressed( ! isPressed );
-		},
-	};
 
 	return (
 		<DropdownMenu
@@ -169,7 +135,6 @@ function NavigationMenuSelector( {
 											setSelectorLabel(
 												__( 'Loading …' )
 											);
-											setEnableOptions( false );
 											onSelectClassicMenu( menu );
 											onClose();
 										} }
@@ -194,7 +159,6 @@ function NavigationMenuSelector( {
 									onCreateNew();
 									setIsCreatingMenu( true );
 									setSelectorLabel( __( 'Loading …' ) );
-									setEnableOptions( false );
 								} }
 							>
 								{ __( 'Create new menu' ) }
