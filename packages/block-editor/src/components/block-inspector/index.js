@@ -172,12 +172,9 @@ const BlockInspector = ( { showNoBlockSelectedMessage = true } ) => {
 	const availableTabs = useInspectorControlsTabs( blockType?.name );
 	const showTabs = availableTabs?.length > 1;
 
-	const isOffCanvasNavigationEditorEnabled =
-		window?.__experimentalEnableOffCanvasNavigationEditor === true;
-
 	const blockInspectorAnimationSettings = useSelect(
 		( select ) => {
-			if ( isOffCanvasNavigationEditorEnabled && blockType ) {
+			if ( blockType ) {
 				const globalBlockInspectorAnimationSettings =
 					select( blockEditorStore ).getSettings()
 						.__experimentalBlockInspectorAnimation;
@@ -187,7 +184,7 @@ const BlockInspector = ( { showNoBlockSelectedMessage = true } ) => {
 			}
 			return null;
 		},
-		[ selectedBlockClientId, isOffCanvasNavigationEditorEnabled, blockType ]
+		[ selectedBlockClientId, blockType ]
 	);
 
 	if ( count > 1 ) {
@@ -253,10 +250,7 @@ const BlockInspector = ( { showNoBlockSelectedMessage = true } ) => {
 
 	return (
 		<BlockInspectorSingleBlockWrapper
-			animate={
-				isOffCanvasNavigationEditorEnabled &&
-				blockInspectorAnimationSettings
-			}
+			animate={ blockInspectorAnimationSettings }
 			wrapper={ ( children ) => (
 				<AnimatedContainer
 					blockInspectorAnimationSettings={

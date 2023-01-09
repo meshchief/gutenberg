@@ -178,14 +178,6 @@ export default function BlockEditor( { setIsInserterOpen } ) {
 		</ToolbarGroup>
 	);
 
-	let MaybeNavMenuSidebarToggle = Fragment;
-	const isOffCanvasNavigationEditorEnabled =
-		window?.__experimentalEnableOffCanvasNavigationEditor === true;
-
-	if ( isOffCanvasNavigationEditorEnabled ) {
-		MaybeNavMenuSidebarToggle = NavMenuSidebarToggle;
-	}
-
 	return (
 		<BlockEditorProvider
 			settings={ settings }
@@ -256,7 +248,7 @@ export default function BlockEditor( { setIsInserterOpen } ) {
 								<__unstableBlockNameContext.Consumer>
 									{ ( blockName ) =>
 										blockName === 'core/navigation' && (
-											<MaybeNavMenuSidebarToggle />
+											<NavMenuSidebarToggle />
 										)
 									}
 								</__unstableBlockNameContext.Consumer>

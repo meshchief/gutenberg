@@ -28,15 +28,6 @@ const NavMenuSidebarToggle = () => {
 	);
 };
 
-let MaybeNavMenuSidebarToggle = Fragment;
-
-const isOffCanvasNavigationEditorEnabled =
-	window?.__experimentalEnableOffCanvasNavigationEditor === true;
-
-if ( isOffCanvasNavigationEditorEnabled ) {
-	MaybeNavMenuSidebarToggle = NavMenuSidebarToggle;
-}
-
 const NavigationEditMenuItem = () => {
 	return (
 		<BlockEditorProvider>
@@ -44,7 +35,7 @@ const NavigationEditMenuItem = () => {
 				<__unstableBlockNameContext.Consumer>
 					{ ( blockName ) =>
 						blockName === 'core/navigation' && (
-							<MaybeNavMenuSidebarToggle />
+							<NavMenuSidebarToggle />
 						)
 					}
 				</__unstableBlockNameContext.Consumer>

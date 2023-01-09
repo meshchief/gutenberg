@@ -18,14 +18,13 @@ import { __ } from '@wordpress/i18n';
 /**
  * Internal dependencies
  */
-import ManageMenusButton from './manage-menus-button';
 import NavigationMenuSelector from './navigation-menu-selector';
 import { LeafMoreMenu } from '../leaf-more-menu';
 
 /* translators: %s: The name of a menu. */
 const actionLabel = __( "Switch to '%s'" );
 
-const ExperimentMainContent = ( {
+const MainContent = ( {
 	clientId,
 	currentMenuId,
 	isLoading,
@@ -59,7 +58,7 @@ const ExperimentMainContent = ( {
 	);
 };
 
-const ExperimentControls = ( props ) => {
+const Controls = ( props ) => {
 	const {
 		createNavigationMenuIsSuccess,
 		createNavigationMenuIsError,
@@ -90,57 +89,20 @@ const ExperimentControls = ( props ) => {
 					actionLabel={ actionLabel }
 				/>
 			</HStack>
-			<ExperimentMainContent { ...props } />
-		</>
-	);
-};
-
-const DefaultControls = ( props ) => {
-	const {
-		createNavigationMenuIsSuccess,
-		createNavigationMenuIsError,
-		currentMenuId = null,
-		isManageMenusButtonDisabled,
-		onCreateNew,
-		onSelectClassicMenu,
-		onSelectNavigationMenu,
-	} = props;
-
-	return (
-		<>
-			<NavigationMenuSelector
-				currentMenuId={ currentMenuId }
-				onSelectClassicMenu={ onSelectClassicMenu }
-				onSelectNavigationMenu={ onSelectNavigationMenu }
-				onCreateNew={ onCreateNew }
-				createNavigationMenuIsSuccess={ createNavigationMenuIsSuccess }
-				createNavigationMenuIsError={ createNavigationMenuIsError }
-				actionLabel={ actionLabel }
-			/>
-			<ManageMenusButton disabled={ isManageMenusButtonDisabled } />
+			<MainContent { ...props } />
 		</>
 	);
 };
 
 const MenuInspectorControls = ( props ) => {
-	const isOffCanvasNavigationEditorEnabled =
-		window?.__experimentalEnableOffCanvasNavigationEditor === true;
 	const menuControlsSlot = window?.__experimentalEnableBlockInspectorTabs
 		? 'list'
 		: undefined;
 
 	return (
 		<InspectorControls __experimentalGroup={ menuControlsSlot }>
-			<PanelBody
-				title={
-					isOffCanvasNavigationEditorEnabled ? null : __( 'Menu' )
-				}
-			>
-				{ isOffCanvasNavigationEditorEnabled ? (
-					<ExperimentControls { ...props } />
-				) : (
-					<DefaultControls { ...props } />
-				) }
+			<PanelBody>
+				<Controls { ...props } />
 			</PanelBody>
 		</InspectorControls>
 	);
