@@ -20,16 +20,13 @@ export const code = {
 	__unstableInputRule( value ) {
 		const BACKTICK = '`';
 		const { start, text } = value;
-		const characterBefore = text.slice( start - 1, start );
 
 		// Quick check the text for the necessary character.
-		if ( characterBefore !== BACKTICK ) {
+		if ( start <= 0 || text[ start - 1 ] !== BACKTICK ) {
 			return value;
 		}
 
-		const textBefore = text.slice( 0, start - 1 );
-		const indexBefore = textBefore.lastIndexOf( BACKTICK );
-
+		const indexBefore = text.lastIndexOf( BACKTICK, start - 2 );
 		if ( indexBefore === -1 ) {
 			return value;
 		}
