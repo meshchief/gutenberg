@@ -1,13 +1,16 @@
 /**
  * WordPress dependencies
  */
+import { useState } from '@wordpress/element';
 import {
 	ExternalLink,
 	TextareaControl,
 	Panel,
 	PanelBody,
+	Notice,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
+import { transformStyles } from '@wordpress/block-editor';
 
 /**
  * Internal dependencies
@@ -17,6 +20,7 @@ import { useStyle } from './hooks';
 function CustomCSSControl() {
 	const [ customCSS, setCustomCSS ] = useStyle( 'css' );
 	const [ themeCSS ] = useStyle( 'css', null, 'base' );
+	const [ cssError, setCSSError ] = useState( null );
 	const ignoreThemeCustomCSS = '/* IgnoreThemeCustomCSS */';
 
 	// If there is custom css from theme.json show it in the edit box
@@ -37,6 +41,15 @@ function CustomCSSControl() {
 			return;
 		}
 		setCustomCSS( value );
+		// TODO: transform it to find syntax error. Note that it will be transformed again
+		// after applied to the preview frame. We should refactor this to prevent double-transform.
+		const [ transformed ] = transformStyles(
+			[ { css: value } ],
+			'.editor-styles-wrapper'
+		);
+		setCSSError(
+			transformed === null ? __( 'Error while parsing the CSS.' ) : null
+		);
 	}
 
 	const originalThemeCustomCSS =
@@ -64,6 +77,15 @@ function CustomCSSControl() {
 					</>
 				}
 			/>
+			{ cssError && (
+				<Notice
+					status="warning"
+					onRemove={ () => setCSSError( null ) }
+					politeness="polite"
+				>
+					{ cssError }
+				</Notice>
+			) }
 			{ originalThemeCustomCSS && (
 				<Panel>
 					<PanelBody
