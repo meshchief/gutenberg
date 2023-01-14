@@ -17,6 +17,7 @@ import {
 	TextControl,
 	SVG,
 	Path,
+	__experimentalVStack as VStack,
 } from '@wordpress/components';
 import { link as linkIcon, close } from '@wordpress/icons';
 
@@ -214,23 +215,26 @@ const ImageURLInputUI = ( {
 	};
 
 	const advancedOptions = (
-		<>
+		<VStack spacing="3">
 			<ToggleControl
+				__nextHasNoMarginBottom
 				label={ __( 'Open in new tab' ) }
 				onChange={ onSetNewTab }
 				checked={ linkTarget === '_blank' }
 			/>
 			<TextControl
+				__nextHasNoMarginBottom
 				label={ __( 'Link rel' ) }
 				value={ rel ?? '' }
 				onChange={ onSetLinkRel }
 			/>
 			<TextControl
+				__nextHasNoMarginBottom
 				label={ __( 'Link CSS Class' ) }
 				value={ linkClass || '' }
 				onChange={ onSetLinkClass }
 			/>
-		</>
+		</VStack>
 	);
 
 	const linkEditorValue = urlInput !== null ? urlInput : url;
