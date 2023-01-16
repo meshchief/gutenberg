@@ -1267,10 +1267,9 @@ class WP_HTML_Tag_Processor {
 	 * @see $lexical_updates
 	 */
 	private function attribute_updates_to_lexical_updates() {
-		$this->lexical_updates   = array_merge(
-			$this->lexical_updates,
-			array_values( $this->attribute_updates )
-		);
+		foreach ( $this->attribute_updates as $update ) {
+			$this->lexical_updates[] = $update;
+		}
 		$this->attribute_updates = array();
 	}
 
