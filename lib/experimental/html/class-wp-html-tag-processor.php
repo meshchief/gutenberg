@@ -1116,9 +1116,6 @@ class WP_HTML_Tag_Processor {
 	 * Converts class name updates into tag attributes updates
 	 * (they are accumulated in different data formats for performance).
 	 *
-	 * This method is only meant to run right before the attribute updates are applied.
-	 * The behavior in all other cases is undefined.
-	 *
 	 * @return void
 	 * @since 6.2.0
 	 *
@@ -1126,14 +1123,24 @@ class WP_HTML_Tag_Processor {
 	 * @see $lexical_updates
 	 */
 	private function class_name_updates_to_attributes_updates() {
-		if ( count( $this->classname_updates ) === 0 || isset( $this->lexical_updates['class'] ) ) {
+		if ( count( $this->classname_updates ) === 0 ) {
 			$this->classname_updates = array();
 			return;
 		}
 
-		$existing_class = isset( $this->attributes['class'] )
-			? substr( $this->html, $this->attributes['class']->value_starts_at, $this->attributes['class']->value_length )
-			: '';
+		if ( isset( $this->lexical_updates['class'] ) ) {
+			$existing_class_attr  = trim( $this->lexical_updates['class']->text );
+			$existing_class_value = substr( $existing_class_attr, strlen( 'class' ) + 2, -1 );
+			$existing_class       = html_entity_decode( $existing_class_value );
+		} elseif ( isset( $this->attributes['class'] ) ) {
+			$existing_class = substr(
+				$this->html,
+				$this->attributes['class']->value_starts_at,
+				$this->attributes['class']->value_length
+			);
+		} else {
+			$existing_class = '';
+		}
 
 		/**
 		 * Updated "class" attribute value.
