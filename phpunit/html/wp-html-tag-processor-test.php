@@ -559,6 +559,23 @@ class WP_HTML_Tag_Processor_Test extends WP_UnitTestCase {
 	/**
 	 * @ticket 56299
 	 *
+	 * @covers add_class
+	 * @covers get_updated_html
+	 * @covers get_attribute
+	 */
+	public function test_get_attribute_reflects_added_class_names_before_they_are_updated_and_retains_classes_from_previous_add_class_calls() {
+		$p = new WP_HTML_Tag_Processor( self::HTML_SIMPLE );
+		$p->next_tag();
+		$p->add_class( 'my-class' );
+		$this->assertSame( 'my-class', $p->get_attribute( 'class' ) );
+		$p->add_class( 'my-other-class' );
+		$this->assertSame( 'my-class my-other-class', $p->get_attribute( 'class' ) );
+		$this->assertSame( '<div class="my-class my-other-class" id="first"><span id="second">Text</span></div>', $p->get_updated_html() );
+	}
+
+	/**
+	 * @ticket 56299
+	 *
 	 * @covers remove_attribute
 	 * @covers get_attribute
 	 * @covers get_updated_html
