@@ -1661,6 +1661,10 @@ class WP_HTML_Tag_Processor {
 	 * @param string $name The attribute name to remove.
 	 */
 	public function remove_attribute( $name ) {
+		if ( $this->is_closing_tag ) {
+			return false;
+		}
+
 		/**
 		 * > There must never be two or more attributes on
 		 * > the same start tag whose names are an ASCII
@@ -1670,7 +1674,12 @@ class WP_HTML_Tag_Processor {
 		 * @see https://html.spec.whatwg.org/multipage/syntax.html#attributes-2:ascii-case-insensitive
 		 */
 		$name = strtolower( $name );
-		if ( $this->is_closing_tag || ! isset( $this->attributes[ $name ] ) ) {
+
+		if ( ! isset( $this->attributes[ $name ] ) ) {
+			if ( isset( $this->lexical_updates[ $name ] ) ) {
+				unset( $this->lexical_updates[ $name ] );
+			}
+
 			return false;
 		}
 
