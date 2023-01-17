@@ -912,10 +912,10 @@ class WP_HTML_Tag_Processor_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * When both set_attribute('class', $value) and add_class( $different_value ) are called,
-	 * the final class name should be $value. In other words, the `add_class` call should be ignored,
-	 * and the `set_attribute` call should win. This holds regardless of the order in which these methods
-	 * are called.
+	 * When both set_attribute( 'class', $value ) and add_class( $different_value ) are called, the
+	 * final class name should be "$value $different_value". In other words, the `add_class` call
+	 * should append its class to the one(s) set by `set_attribute`. This holds regardless of the
+	 * order in which these methods are called.
 	 *
 	 * @ticket 56299
 	 *
@@ -930,12 +930,12 @@ class WP_HTML_Tag_Processor_Test extends WP_UnitTestCase {
 		$p->add_class( 'add_class' );
 		$p->set_attribute( 'class', 'set_attribute' );
 		$this->assertSame(
-			'<div class="set_attribute" id="first"><span class="not-main bold with-border" id="second">Text</span></div>',
+			'<div class="set_attribute add_class" id="first"><span class="not-main bold with-border" id="second">Text</span></div>',
 			$p->get_updated_html(),
 			"Calling get_updated_html after updating first tag's attributes did not return the expected HTML"
 		);
 		$this->assertSame(
-			'set_attribute',
+			'set_attribute add_class',
 			$p->get_attribute( 'class' ),
 			"Calling get_attribute after updating first tag's attributes did not return the expected class name"
 		);
@@ -945,22 +945,22 @@ class WP_HTML_Tag_Processor_Test extends WP_UnitTestCase {
 		$p->set_attribute( 'class', 'set_attribute' );
 		$p->add_class( 'add_class' );
 		$this->assertSame(
-			'<div class="set_attribute" id="first"><span class="not-main bold with-border" id="second">Text</span></div>',
+			'<div class="set_attribute add_class" id="first"><span class="not-main bold with-border" id="second">Text</span></div>',
 			$p->get_updated_html(),
 			"Calling get_updated_html after updating first tag's attributes did not return the expected HTML"
 		);
 		$this->assertSame(
-			'set_attribute',
+			'set_attribute add_class',
 			$p->get_attribute( 'class' ),
 			"Calling get_attribute after updating first tag's attributes did not return the expected class name"
 		);
 	}
 
 	/**
-	 * When both set_attribute('class', $value) and add_class( $different_value ) are called,
-	 * the final class name should be $value. In other words, the `add_class` call should be ignored,
-	 * and the `set_attribute` call should win. This holds regardless of the order in which these methods
-	 * are called, and even before `get_updated_html` is called.
+	 * When both set_attribute( 'class', $value ) and add_class( $different_value ) are called, the
+	 * final class name should be "$value $different_value". In other words, the `add_class` call
+	 * should append its class to the one(s) set by `set_attribute`. This holds regardless of the
+	 * order in which these methods are called, and even before `get_updated_html` is called.
 	 *
 	 * @ticket 56299
 	 *
@@ -975,12 +975,12 @@ class WP_HTML_Tag_Processor_Test extends WP_UnitTestCase {
 		$p->add_class( 'add_class' );
 		$p->set_attribute( 'class', 'set_attribute' );
 		$this->assertSame(
-			'set_attribute',
+			'set_attribute add_class',
 			$p->get_attribute( 'class' ),
 			"Calling get_attribute after updating first tag's attributes did not return the expected class name"
 		);
 		$this->assertSame(
-			'<div class="set_attribute" id="first"><span class="not-main bold with-border" id="second">Text</span></div>',
+			'<div class="set_attribute add_class" id="first"><span class="not-main bold with-border" id="second">Text</span></div>',
 			$p->get_updated_html(),
 			"Calling get_updated_html after updating first tag's attributes did not return the expected HTML"
 		);
@@ -990,12 +990,12 @@ class WP_HTML_Tag_Processor_Test extends WP_UnitTestCase {
 		$p->set_attribute( 'class', 'set_attribute' );
 		$p->add_class( 'add_class' );
 		$this->assertSame(
-			'set_attribute',
+			'set_attribute add_class',
 			$p->get_attribute( 'class' ),
 			"Calling get_attribute after updating first tag's attributes did not return the expected class name"
 		);
 		$this->assertSame(
-			'<div class="set_attribute" id="first"><span class="not-main bold with-border" id="second">Text</span></div>',
+			'<div class="set_attribute add_class" id="first"><span class="not-main bold with-border" id="second">Text</span></div>',
 			$p->get_updated_html(),
 			"Calling get_updated_html after updating first tag's attributes did not return the expected HTML"
 		);
