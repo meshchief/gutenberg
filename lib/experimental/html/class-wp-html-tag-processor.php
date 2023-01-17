@@ -1403,8 +1403,8 @@ class WP_HTML_Tag_Processor {
 		}
 
 		// If we have an update for this attribute, return the updated value.
-		if ( isset( $this->attribute_updates[ $comparable ] ) ) {
-			$attribute = trim( $this->attribute_updates[ $comparable ]->text );
+		if ( isset( $this->lexical_updates[ $comparable ] ) ) {
+			$attribute = trim( $this->lexical_updates[ $comparable ]->text );
 			// Is this a boolean attribute?
 			if ( $attribute === $comparable ) {
 				return true;
