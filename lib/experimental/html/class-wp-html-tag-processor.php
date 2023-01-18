@@ -1130,6 +1130,9 @@ class WP_HTML_Tag_Processor {
 
 		if ( isset( $this->lexical_updates['class'] ) ) {
 			$existing_class = $this->extract_attribute_value_from_lexical_update( 'class' );
+			if ( true === $existing_class ) {
+				$existing_class = '';
+			}
 		} elseif ( isset( $this->attributes['class'] ) ) {
 			$existing_class = substr(
 				$this->html,
