@@ -1453,6 +1453,14 @@ class WP_HTML_Tag_Processor {
 
 		$comparable = strtolower( $name );
 
+		/**
+		 * For $this->lexical_updates (below), it makes sense (and is easy enough) to only
+		 * evaluate the updates for the attribute we're interested in (if any) and to ignore
+		 * updates for all other attributes. For class name updates OTOH, we would need to
+		 * replicate most of the logic from `class_name_updates_to_attributes_updates` here,
+		 * so we might as well just call that function and have classname updates "promoted"
+		 * to attribute updates.
+		 */
 		if ( 'class' === $name ) {
 			$this->class_name_updates_to_attributes_updates();
 		}
