@@ -1375,6 +1375,15 @@ class WP_HTML_Tag_Processor {
 		return $a->end - $b->end;
 	}
 
+	/**
+	 * Given an attribute name, return its value as set in $lexical_updates.
+	 *
+	 * @since 6.2.0
+	 *
+	 * @param string $name The attribute name.
+	 * @return string|true|null Value of attribute or `null` if not available.
+	 *                          Boolean attributes return `true`.
+	 */
 	private function extract_attribute_value_from_lexical_update( $name ) {
 		$comparable = strtolower( trim( $name ) );
 
