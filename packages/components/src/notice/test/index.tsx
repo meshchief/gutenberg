@@ -13,7 +13,7 @@ import { speak } from '@wordpress/a11y';
  */
 import Notice from '../index';
 
-jest.mock( '@wordpress/a11y', () => ( { speak: jest.fn() } ) );
+const speakMock = speak as jest.MockedFunction< typeof speak >;
 
 function getNoticeWrapper( container: HTMLElement ) {
 	return container.firstChild;
@@ -21,7 +21,7 @@ function getNoticeWrapper( container: HTMLElement ) {
 
 describe( 'Notice', () => {
 	beforeEach( () => {
-		speak.mockReset();
+		speakMock.mockReset();
 	} );
 
 	it( 'should match snapshot', () => {
