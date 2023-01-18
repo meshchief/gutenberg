@@ -1418,6 +1418,22 @@ class WP_HTML_Tag_Processor {
 			}
 
 			// Is this a boolean attribute?
+			/*
+			 * When the lexical update contains just the attribute name,
+			 * the value becomes a boolean true. For example:
+			 * 
+			 * ```php
+			 * $p = new WP_HTML_Tag_Processor('<input type="checkbox" />');
+			 * $p->set_attribute('checked', true); 
+			 * // The lexical update contains just the string "checked"
+			 * 
+			 * $p->get_attribute('checked');
+			 * // returns true thanks to the condition below
+			 * 
+			 * echo $p->get_updated_html();
+			 * // <input type="checkbox" checked />
+			 * ```
+			 */
 			if ( $attribute === $comparable ) {
 				return true;
 			}
