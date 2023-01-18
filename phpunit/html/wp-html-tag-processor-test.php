@@ -596,7 +596,7 @@ class WP_HTML_Tag_Processor_Test extends WP_UnitTestCase {
 	 * @covers get_attribute
 	 * @covers get_updated_html
 	 */
-	public function test_get_attribute_reflects_set_attribute_followed_by_remove_attribute_before_it_is_updated() {
+	public function test_get_attribute_reflects_adding_and_then_removing_an_attribute_before_it_is_updated() {
 		$p = new WP_HTML_Tag_Processor( self::HTML_SIMPLE );
 		$p->next_tag();
 		$p->set_attribute( 'test-attribute', 'test-value' );
