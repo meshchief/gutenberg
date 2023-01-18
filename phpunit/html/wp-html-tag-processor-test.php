@@ -640,9 +640,10 @@ class WP_HTML_Tag_Processor_Test extends WP_UnitTestCase {
 	/**
 	 * @ticket 56299
 	 *
+	 * @covers add_class
 	 * @covers remove_class
-	 * @covers get_updated_html
 	 * @covers get_attribute
+	 * @covers get_updated_html
 	 */
 	public function test_get_attribute_reflects_setting_and_then_removing_a_class_name_before_it_is_updated() {
 		$p = new WP_HTML_Tag_Processor( self::HTML_WITH_CLASSES );
@@ -653,6 +654,14 @@ class WP_HTML_Tag_Processor_Test extends WP_UnitTestCase {
 		$this->assertSame( self::HTML_WITH_CLASSES, $p->get_updated_html() );
 	}
 
+	/**
+	 * @ticket 56299
+	 *
+	 * @covers add_class
+	 * @covers remove_class
+	 * @covers get_attribute
+	 * @covers get_updated_html
+	 */
 	public function test_get_attribute_reflects_duplicating_and_then_removing_an_existing_class_name_before_it_is_updated() {
 		$p = new WP_HTML_Tag_Processor( self::HTML_WITH_CLASSES );
 		$p->next_tag();
