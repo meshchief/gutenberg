@@ -1056,6 +1056,40 @@ class WP_HTML_Tag_Processor_Test extends WP_UnitTestCase {
 	 * @ticket 56299
 	 *
 	 * @covers set_attribute
+	 * @covers add_class
+	 * @covers get_attribute
+	 * @covers get_updated_html
+	 */
+	public function test_add_class_overrides_boolean_class_attribute() {
+		$p = new WP_HTML_Tag_Processor( self::HTML_SIMPLE );
+		$p->next_tag();
+		$p->set_attribute( 'class', true );
+		$p->add_class( 'add_class' );
+		$this->assertSame( '<div class="add_class" id="first"><span id="second">Text</span></div>', $p->get_updated_html() );
+		$this->assertSame( 'add_class', $p->get_attribute( 'class' ) );
+	}
+
+	/**
+	 * @ticket 56299
+	 *
+	 * @covers set_attribute
+	 * @covers add_class
+	 * @covers get_attribute
+	 * @covers get_updated_html
+	 */
+	public function test_add_class_overrides_boolean_class_attribute_even_before_updating() {
+		$p = new WP_HTML_Tag_Processor( self::HTML_SIMPLE );
+		$p->next_tag();
+		$p->set_attribute( 'class', true );
+		$p->add_class( 'add_class' );
+		$this->assertSame( 'add_class', $p->get_attribute( 'class' ) );
+		$this->assertSame( '<div class="add_class" id="first"><span id="second">Text</span></div>', $p->get_updated_html() );
+	}
+
+	/**
+	 * @ticket 56299
+	 *
+	 * @covers set_attribute
 	 * @covers remove_attribute
 	 * @covers add_class
 	 * @covers remove_class
