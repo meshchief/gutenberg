@@ -1129,9 +1129,7 @@ class WP_HTML_Tag_Processor {
 		}
 
 		if ( isset( $this->lexical_updates['class'] ) ) {
-			$existing_class_attr  = trim( $this->lexical_updates['class']->text );
-			$existing_class_value = substr( $existing_class_attr, strlen( 'class' ) + 2, -1 );
-			$existing_class       = html_entity_decode( $existing_class_value );
+			$existing_class = $this->extract_attribute_value_from_lexical_update( 'class' );
 		} elseif ( isset( $this->attributes['class'] ) ) {
 			$existing_class = substr(
 				$this->html,
@@ -1377,6 +1375,44 @@ class WP_HTML_Tag_Processor {
 		return $a->end - $b->end;
 	}
 
+	private function extract_attribute_value_from_lexical_update( $name ) {
+		$comparable = strtolower( trim( $name ) );
+
+		if ( ! isset( $this->lexical_updates[ $comparable ] ) ) {
+			return null;
+		}
+
+		$attribute = trim( $this->lexical_updates[ $comparable ]->text );
+		// Has the attribute been removed?
+		if ( '' === $attribute ) {
+			return null;
+		}
+
+		/**
+		 * When the lexical update contains just the attribute name,
+		 * the value becomes a boolean true. For example:
+		 *
+		 * ```php
+		 * $p = new WP_HTML_Tag_Processor('<input type="checkbox" />');
+		 * $p->set_attribute('checked', true);
+		 * // The lexical update contains just the string "checked"
+		 *
+		 * $p->get_attribute('checked');
+		 * // returns true thanks to the condition below
+		 *
+		 * echo $p->get_updated_html();
+		 * // <input type="checkbox" checked />
+		 * ```
+		 */
+		if ( $attribute === $comparable ) {
+			return true;
+		}
+
+		// $attribute is a 'name="value"' string, so we extract the value.
+		$value = substr( $attribute, strlen( $comparable ) + 2, -1 );
+		return html_entity_decode( $value );
+	}
+
 	/**
 	 * Returns the value of the parsed attribute in the currently-opened tag.
 	 *
@@ -1411,36 +1447,7 @@ class WP_HTML_Tag_Processor {
 
 		// If we have an update for this attribute, return the updated value.
 		if ( isset( $this->lexical_updates[ $comparable ] ) ) {
-			$attribute = trim( $this->lexical_updates[ $comparable ]->text );
-			// Has the attribute been removed?
-			if ( '' === $attribute ) {
-				return null;
-			}
-
-			// Is this a boolean attribute?
-			/*
-			 * When the lexical update contains just the attribute name,
-			 * the value becomes a boolean true. For example:
-			 *
-			 * ```php
-			 * $p = new WP_HTML_Tag_Processor('<input type="checkbox" />');
-			 * $p->set_attribute('checked', true);
-			 * // The lexical update contains just the string "checked"
-			 *
-			 * $p->get_attribute('checked');
-			 * // returns true thanks to the condition below
-			 *
-			 * echo $p->get_updated_html();
-			 * // <input type="checkbox" checked />
-			 * ```
-			 */
-			if ( $attribute === $comparable ) {
-				return true;
-			}
-
-			// $attribute is a 'name="value"' string, so we extract the value.
-			$value = substr( $attribute, strlen( $comparable ) + 2, -1 );
-			return html_entity_decode( $value );
+			return $this->extract_attribute_value_from_lexical_update( $comparable );
 		}
 
 		if ( ! isset( $this->attributes[ $comparable ] ) ) {
