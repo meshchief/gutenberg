@@ -1124,7 +1124,6 @@ class WP_HTML_Tag_Processor {
 	 */
 	private function class_name_updates_to_attributes_updates() {
 		if ( count( $this->classname_updates ) === 0 ) {
-			$this->classname_updates = array();
 			return;
 		}
 
