@@ -653,6 +653,15 @@ class WP_HTML_Tag_Processor_Test extends WP_UnitTestCase {
 		$this->assertSame( self::HTML_WITH_CLASSES, $p->get_updated_html() );
 	}
 
+	public function test_get_attribute_reflects_duplicating_and_then_removing_an_existing_class_name_before_it_is_updated() {
+		$p = new WP_HTML_Tag_Processor( self::HTML_WITH_CLASSES );
+		$p->next_tag();
+		$p->add_class( 'with-border' );
+		$p->remove_class( 'with-border' );
+		$this->assertSame( 'main', $p->get_attribute( 'class' ) );
+		$this->assertSame( '<div class="main" id="first"><span class="not-main bold with-border" id="second">Text</span></div>', $p->get_updated_html() );
+	}
+
 	/**
 	 * According to HTML spec, only the first instance of an attribute counts.
 	 * The other ones are ignored.
