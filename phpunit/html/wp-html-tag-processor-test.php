@@ -638,6 +638,22 @@ class WP_HTML_Tag_Processor_Test extends WP_UnitTestCase {
 	}
 
 	/**
+	 * @ticket 56299
+	 *
+	 * @covers remove_class
+	 * @covers get_updated_html
+	 * @covers get_attribute
+	 */
+	public function test_get_attribute_reflects_setting_and_then_removing_a_class_name_before_it_is_updated() {
+		$p = new WP_HTML_Tag_Processor( self::HTML_WITH_CLASSES );
+		$p->next_tag();
+		$p->add_class( 'foo-class' );
+		$p->remove_class( 'foo-class' );
+		$this->assertSame( 'main with-border', $p->get_attribute( 'class' ) );
+		$this->assertSame( self::HTML_WITH_CLASSES, $p->get_updated_html() );
+	}
+
+	/**
 	 * According to HTML spec, only the first instance of an attribute counts.
 	 * The other ones are ignored.
 	 *
