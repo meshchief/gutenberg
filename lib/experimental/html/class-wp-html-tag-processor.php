@@ -1683,6 +1683,9 @@ class WP_HTML_Tag_Processor {
 		$name = strtolower( $name );
 
 		if ( ! isset( $this->attributes[ $name ] ) ) {
+			if ( 'class' === $name && count( $this->classname_updates ) !== 0 ) {
+				$this->classname_updates = array();
+			}
 			if ( isset( $this->lexical_updates[ $name ] ) ) {
 				unset( $this->lexical_updates[ $name ] );
 			}
