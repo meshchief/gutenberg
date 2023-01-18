@@ -608,6 +608,23 @@ class WP_HTML_Tag_Processor_Test extends WP_UnitTestCase {
 	/**
 	 * @ticket 56299
 	 *
+	 * @covers set_attribute
+	 * @covers remove_attribute
+	 * @covers get_attribute
+	 * @covers get_updated_html
+	 */
+	public function test_get_attribute_reflects_set_attribute_followed_by_remove_attribute_for_existing_attribute_before_it_is_updated() {
+		$p = new WP_HTML_Tag_Processor( self::HTML_SIMPLE );
+		$p->next_tag();
+		$p->set_attribute( 'id', 'test-value' );
+		$p->remove_attribute( 'id' );
+		$this->assertNull( $p->get_attribute( 'id' ) );
+		$this->assertSame( '<div ><span id="second">Text</span></div>', $p->get_updated_html() );
+	}
+
+	/**
+	 * @ticket 56299
+	 *
 	 * @covers remove_class
 	 * @covers get_updated_html
 	 * @covers get_attribute
