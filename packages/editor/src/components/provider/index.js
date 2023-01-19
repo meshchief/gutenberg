@@ -33,10 +33,14 @@ function EditorProvider( {
 		}
 		return { postId: post.id, postType: post.type };
 	}, [ post.id, post.type ] );
-	const { selection, isReady } = useSelect( ( select ) => {
-		const { getEditorSelection, __unstableIsEditorReady } =
-			select( editorStore );
+	const { editorSettings, selection, isReady } = useSelect( ( select ) => {
+		const {
+			getEditorSettings,
+			getEditorSelection,
+			__unstableIsEditorReady,
+		} = select( editorStore );
 		return {
+			editorSettings: getEditorSettings(),
 			isReady: __unstableIsEditorReady(),
 			selection: getEditorSelection(),
 		};
@@ -47,8 +51,8 @@ function EditorProvider( {
 		type,
 		{ id }
 	);
-	const editorSettings = useBlockEditorSettings(
-		settings,
+	const blockEditorSettings = useBlockEditorSettings(
+		editorSettings,
 		!! __unstableTemplate
 	);
 	const {
@@ -109,7 +113,7 @@ function EditorProvider( {
 						onChange={ onChange }
 						onInput={ onInput }
 						selection={ selection }
-						settings={ editorSettings }
+						settings={ blockEditorSettings }
 						useSubRegistry={ false }
 					>
 						{ children }
