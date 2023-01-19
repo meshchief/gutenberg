@@ -15,7 +15,6 @@
 -   Removed deprecated `@storybook/addon-knobs` dependency from the package ([47152](https://github.com/WordPress/gutenberg/pull/47152)).
 -   `Notice`: refactor to TypeScript ([47118](https://github.com/WordPress/gutenberg/pull/47118)).
 
-
 ### Bug Fix
 
 -   `TabPanel`: Fix initial tab selection when the tab declaration is lazily added to the `tabs` array ([47100](https://github.com/WordPress/gutenberg/pull/47100)).
