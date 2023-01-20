@@ -15,7 +15,6 @@ import {
 } from '@wordpress/core-data';
 import {
 	BlockList,
-	BlockEditorProvider,
 	__experimentalLinkControl,
 	BlockInspector,
 	BlockTools,
@@ -23,6 +22,7 @@ import {
 	__unstableUseTypingObserver as useTypingObserver,
 	BlockEditorKeyboardShortcuts,
 	store as blockEditorStore,
+	experiments as blockEditorExperiments,
 } from '@wordpress/block-editor';
 import {
 	useMergeRefs,
@@ -42,6 +42,9 @@ import BackButton from './back-button';
 import ResizableEditor from './resizable-editor';
 import EditorCanvas from './editor-canvas';
 import StyleBook from '../style-book';
+import { unlock } from '../../experiments';
+
+const { ExperimentalBlockEditorProvider } = unlock( blockEditorExperiments );
 
 const LAYOUT = {
 	type: 'default',
@@ -155,7 +158,7 @@ export default function BlockEditor() {
 		( isTemplatePart && hasBlocks ) || isViewMode ? false : undefined;
 
 	return (
-		<BlockEditorProvider
+		<ExperimentalBlockEditorProvider
 			settings={ settings }
 			value={ blocks }
 			onInput={ onInput }
@@ -225,6 +228,6 @@ export default function BlockEditor() {
 				}
 			</StyleBook.Slot>
 			<ReusableBlocksMenuItems />
-		</BlockEditorProvider>
+		</ExperimentalBlockEditorProvider>
 	);
 }

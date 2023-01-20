@@ -9,7 +9,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
  * WordPress dependencies
  */
 import { Component } from '@wordpress/element';
-import { EditorProvider } from '@wordpress/editor';
+import { experiments as editorExperiments } from '@wordpress/editor';
 import { parse, serialize, store as blocksStore } from '@wordpress/blocks';
 import { withDispatch, withSelect } from '@wordpress/data';
 import { compose } from '@wordpress/compose';
@@ -25,7 +25,9 @@ import { store as coreStore } from '@wordpress/core-data';
  */
 import Layout from './components/layout';
 import { store as editPostStore } from './store';
+import { unlock } from './experiments';
 
+const { ExperimentalEditorProvider } = unlock( editorExperiments );
 class Editor extends Component {
 	constructor( props ) {
 		super( ...arguments );
@@ -175,7 +177,7 @@ class Editor extends Component {
 		return (
 			<GestureHandlerRootView style={ { flex: 1 } }>
 				<SlotFillProvider>
-					<EditorProvider
+					<ExperimentalEditorProvider
 						settings={ editorSettings }
 						post={ normalizedPost }
 						initialEdits={ initialEdits }
@@ -183,7 +185,7 @@ class Editor extends Component {
 						{ ...props }
 					>
 						<Layout setTitleRef={ this.setTitleRef } />
-					</EditorProvider>
+					</ExperimentalEditorProvider>
 				</SlotFillProvider>
 			</GestureHandlerRootView>
 		);

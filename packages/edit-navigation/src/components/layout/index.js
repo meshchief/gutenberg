@@ -3,8 +3,8 @@
  */
 import {
 	BlockEditorKeyboardShortcuts,
-	BlockEditorProvider,
 	BlockTools,
+	blockEditorExperiments,
 	__unstableUseBlockSelectionClearer as useBlockSelectionClearer,
 } from '@wordpress/block-editor';
 import { useEntityBlockEditor } from '@wordpress/core-data';
@@ -42,6 +42,10 @@ import {
 	NAVIGATION_POST_KIND,
 	NAVIGATION_POST_POST_TYPE,
 } from '../../constants';
+
+import { unlock } from '../../experiments';
+
+const { ExperimentalBlockEditorProvider } = unlock( blockEditorExperiments );
 
 const interfaceLabels = {
 	/* translators: accessibility text for the navigation screen top bar landmark region. */
@@ -117,7 +121,7 @@ export default function Layout( { blockEditorSettings } ) {
 					<BlockEditorKeyboardShortcuts.Register />
 					<NavigationEditorShortcuts.Register />
 					<NavigationEditorShortcuts saveBlocks={ savePost } />
-					<BlockEditorProvider
+					<ExperimentalBlockEditorProvider
 						value={ blocks }
 						onInput={ onInput }
 						onChange={ onChange }
@@ -198,7 +202,7 @@ export default function Layout( { blockEditorSettings } ) {
 							) }
 						</IsMenuNameControlFocusedContext.Provider>
 						<UnsavedChangesWarning />
-					</BlockEditorProvider>
+					</ExperimentalBlockEditorProvider>
 					<Popover.Slot />
 					<PluginArea />
 				</SlotFillProvider>
