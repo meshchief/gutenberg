@@ -197,9 +197,7 @@ function MyFirstApp() {
 		if ( searchTerm ) {
 			query.search = searchTerm;
 		}
-		return {
-			pages: select( coreDataStore ).getEntityRecords( 'postType', 'page', query )
-		}
+		return select(coreDataStore).getEntityRecords("postType", "page", query);
 	}, [searchTerm] );
 
 	// ...
